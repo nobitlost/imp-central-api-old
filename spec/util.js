@@ -22,9 +22,29 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-module.exports = require('./lib/ImpCentralApi');
-module.exports.Deployments = require('./lib/Deployments');
-module.exports.DeviceGroups = require('./lib/DeviceGroups');
-module.exports.Devices = require('./lib/Devices');
-module.exports.Products = require('./lib/Products');
-module.exports.Errors = require('./lib/Errors');
+'use strict';
+
+const config = require('./config');
+const ImpCentralApi = require('../lib/ImpCentralApi');
+
+const TIMEOUT = 10000;
+
+var imp = new ImpCentralApi();
+
+module.exports.getRandomInt = function () {
+    return Math.floor(Math.random() * 10000);
+}
+
+module.exports.init = function (done) {
+    imp.debug = config.debug;
+    imp.auth.login(config.email, config.password).
+        then((res) => {
+            done();
+        }).
+        catch((error) => {
+            done.fail(error);
+        });
+}
+
+module.exports.imp = imp;
+module.exports.TIMEOUT = TIMEOUT;

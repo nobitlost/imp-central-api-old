@@ -4,7 +4,7 @@
   "description": "Electric Imp Central API v5 Client",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/jasmine/bin/jasmine.js"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
