@@ -10,8 +10,10 @@ This library is a JavaScript wrapper for the [Electric Imp impCentral API (v5)](
 
 ### Instantiation
 
-To instantiate this library you need to call *ImpCentralApi* class constructor.
+To instantiate this library you need to call [ImpCentralApi class](./lib/ImpCentralApi.js) constructor.
+
 By default the library works with the following impCentral API base endpoint: **TODO: add the final link**
+
 You can optionally pass to the constructor an alternative impCentral API base endpoint. This can be used to connect to private impCloud installations.
 
 ```javascript
@@ -19,10 +21,11 @@ const Imp = require('imp-central-api');
 const imp = new Imp('<api_base_endpoint>'); 
 ```
 
+After instantiation use *ImpCentralApi* getters to obtain the subclasses which provide 
+
 ### Authorization / Authentication
 
-Access to almost every endpoint in impCentral API requires authorization.
-Authorization is presented via an access_token in the HTTP Authorization header.
+Access to almost every endpoint in impCentral API requires authorization. Authorization is presented via an access_token in the HTTP Authorization header.
 
 [Auth class](./lib/Auth.js) of the library provides several methods to initialize the library by an access token to allow further access to impCentral API:
 
@@ -38,6 +41,14 @@ Remember, when access token is expired any call of impCentral API returns 401 er
 For more information see [impCentral API: Auth](https://preview-apidoc.electricimp.com/accounts.html#tag/Auth) **TODO: change the link to the final one**
 
 ### Classes and Methods
+
+This library is a JavaScript wrapper for impCentral API.
+
+*Accounts, Products, DeviceGroups, Devices, Deployments* classes of the library map to the corresponding groups in impCentral API. Interface methods of these classes mostly map one to one to the corresponding methods of impCentral API.
+
+The same is basically applicable to *Auth* class as well. But this class is enhanced to provide different ways of access token obtaining.
+
+
 
 ### Limitations
 
