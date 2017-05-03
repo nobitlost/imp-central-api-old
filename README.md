@@ -61,7 +61,7 @@ Remember, when access token is expired any call of impCentral API returns 401 er
 
 For more information see [impCentral API: Auth](https://preview-apidoc.electricimp.com/accounts.html#tag/Auth) **TODO: change the link to the final one**
 
-### impCentral API calls
+### impCentral API Calls
 
 This library is a JavaScript wrapper for impCentral API.
 
@@ -93,6 +93,97 @@ The two type of errors above indicate issues which usually happen during an appl
 - *ImpCentralApiError* - Indicates that HTTP request to impCentral API failed. The error details can be found in the message, statusCode and body properties. This error may occur during the normal execution of an application. The exact body format is described in [impCentral API: Error Handling](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**
 
 ## impCentral API Coverage
+
+**TODO: update according to the final impCentral API list of functionality**
+
+**TODO: change impCentral links to the final ones** 
+
+### [impCentral API: Accounts](https://preview-apidoc.electricimp.com/accounts.html#tag/Accounts)
+
+Library Class: [Accounts](./lib/Accounts.js)
+
+| impCentral API Functionality | Library Method(s) |
+| ---------------------------- | ----------------- |
+| Retrieve account information | *accounts.get()* |
+| Create an Account | Not supported |
+| Verify an Email Address and Finalize an Account | Not supported |
+
+### [impCentral API: Auth](https://preview-apidoc.electricimp.com/accounts.html#tag/Auth)
+
+Library Class: [Auth](./lib/Auth.js)
+
+| impCentral API Functionality | Library Method(s) |
+| ---------------------------- | ----------------- |
+| Authenticate and Retrieve an Access Token | *auth.login()*, *auth.loginWithOTP()* |
+| Exchange a refresh token or login key for an Access Token | *auth.refreshAccessToken()*, *auth.getAccessToken()* |
+
+### [impCentral API: Products](https://preview-apidoc.electricimp.com/#tag/Products)
+
+Library Class: [Products](./lib/Products.js)
+
+| impCentral API Functionality | Library Method(s) |
+| ---------------------------- | ----------------- |
+| List existing Products | *products.list()* |
+| Create a Product | *products.create()* |
+| Retrieve a specific Product | *products.get()* |
+| Update a specific Product | *products.update()* |
+| Delete a specific Product | *products.delete()* |
+| Update a specific Webhook | Not supported (Factory/Production feature) |
+
+### [impCentral API: Device Groups](https://preview-apidoc.electricimp.com/#tag/DeviceGroups)
+
+Library Class: [DeviceGroups](./lib/DeviceGroups.js)
+
+Only *'development_devicegroup'* type is supported and accepted as parameters. Factory/Production related parameters are ignored.
+
+| impCentral API Functionality | Library Method(s) |
+| ---------------------------- | ----------------- |
+| List existing Device Groups | *deviceGroups.list()* |
+| Create a Device Group | *deviceGroups.create()* |
+| Get a specific DeviceGroup | *deviceGroups.get()* |
+| Update a specific Device Group | *deviceGroups.update()* |
+| Delete a specific DeviceGroup | *deviceGroups.delete()* |
+| Restart all the devices in a Device Group | *deviceGroups.restartDevices()* |
+| Assign one or more devices to a Device Group | *deviceGroups.addDevices()* |
+| Remove one or more devices from a Device Group |  *deviceGroups.removeDevices()* |
+
+### [impCentral API: Devices](https://preview-apidoc.electricimp.com/#tag/Devices)
+
+Library Class: [Devices](./lib/Devices.js)
+
+Only *'development_devicegroup'* type is supported and accepted as parameters.
+
+| impCentral API Functionality | Library Method(s) |
+| ---------------------------- | ----------------- |
+| Assign one or more devices to a Device Group | *deviceGroups.addDevices()* |
+| Remove one or more devices from a Device Group |  *deviceGroups.removeDevices()* |
+| List the Devices owned by the Account | *devices.list()* |
+| Get a specific Device | *devices.get()* |
+| Remove a specific device from the account | *devices.delete()* |
+| Update a Device | *devices.update()* |
+| Restart a Device | *devices.restart()* |
+
+### [impCentral API: Deployments](https://preview-apidoc.electricimp.com/#tag/Deployments)
+
+Library Class: [Deployments](./lib/Deployments.js)
+
+Only *'development_devicegroup'* type is supported and accepted as parameters.
+
+| impCentral API Functionality | Library Method(s) |
+| ---------------------------- | ----------------- |
+| List the account's Deployment history | *deployments.list()* |
+| Create a Deployment | *deployments.create()* |
+| Get a specific Deployment | *deployments.get()* |
+| Update a specific Deployment | *deployments.update()* |
+| Delete a Deployment | *deployments.delete()* |
+
+### [impCentral API: Webhooks](https://preview-apidoc.electricimp.com/#tag/Webhooks)
+
+Not supported (Factory/Production feature).
+
+### impCentral API: Logging
+
+Not supported by impCentral API yet.
 
 ## Examples
 
