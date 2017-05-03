@@ -2,6 +2,8 @@
 
 This library is a JavaScript wrapper for the [Electric Imp impCentral API (v5)](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
 
+It covers the functionality needed for development processes. The library does not cover factory and production processes.
+
 ## Library Usage
 
 Using the library you are doing:
@@ -40,7 +42,7 @@ const imp = new Imp('<api_base_endpoint>');
 imp.auth.<auth_method()>;
 imp.products.<products_method()>;
 ```
-**TODO: correct the example if needed**
+**TODO: correct the example, if needed, or remove at all**
 
 ### Authorization / Authentication
 
@@ -69,25 +71,79 @@ See **impCentral API Coverage** section below for the list of the supported impC
 
 ### Results Processing
 
+All requests to impCentral API are made asynchronously via Promises. Any method which sends a request returns a Promise:
+
+- if operation succeeds, the Promise resolves with HTTP response body;
+- if operation fails, the Promise rejects with an error.
+
+You need to parse the returned HTTP response body by your code.
+
+The exact format of HTTP response body for every request can be found in [Electric Imp impCentral API (v5)](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
+
 ### Errors Processing
 
+[Error classes](./lib/Errors.js) define different types of errors returned by the library:
 
+- *LibraryError* - indicates that the library detects an error, e.g. the library is wrongly initialized. The error details can be found in the message property.
 
+- *InvalidArgumentError* - indicates that the library method is called with invalid argument(s). The error details can be found in the message property.
 
-### Limitations
+The two type of errors above indicate issues which usually happen during an application development. Usually they should be fixed during debugging and therefore should not occur after the application has been deployed.
 
-development features only
-
-
-### Filtering
-
-### Pagination
-
-### Debug Output
+- *ImpCentralApiError* - Indicates that HTTP request to impCentral API failed. The error details can be found in the message, statusCode and body properties. This error may occur during the normal execution of an application. The exact body format is described in [impCentral API: Error Handling](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**
 
 ## impCentral API Coverage
 
 ## Examples
+
+**TODO: check the examples and correct/extend, if needed. Add more comments?**
+
+1. library initialization using email/password login:
+
+```javascript
+const Imp = require('imp-central-api');
+const imp = new Imp('https://api.ei.run/v5');
+var token;
+imp.auth.login(email, password).then((result) => {
+    token = result.access_token.access_token;
+},
+(error) => {
+    // check for the error
+});
+```
+
+2. library initialization using existing access token, product and device group creation:
+
+```javascript
+imp.auth.accessToken = token;
+var accountId;
+imp.accounts.get().then((result) => {
+    accountId = result.data.id;
+});
+
+// accountId is optional parameter of create(), if not provided, product will be assigned to the acting user
+imp.products.create({ name : 'test_product'}, accountId).then((result) => {
+    var productId = result.data.id;
+    imp.deviceGroups.create(
+        productId,
+        DeviceGroups.TYPE_DEVELOPMENT,
+        {name : 'temp_sensors', descr : 'temperature sensors'}).then((result) => {
+        var devGroupId = result.data.id;
+    });
+});
+```
+
+3. list existing device groups with filters and restart all the devices from the first device group:
+
+```javascript
+var filters = {};
+filters[DeviceGroups.FILTER_OWNER_ID] = accountId;
+filters[DeviceGroups.FILTER_TYPE] = DeviceGroups.TYPE_DEVELOPMENT;
+imp.deviceGroups.list(filters).then((result) => {
+    var firstDevGroupId = result.data[0].id;
+    imp.deviceGroups.restartDevices(firstDevGroupId);
+});
+```
 
 ## License
 
