@@ -2,11 +2,27 @@
 
 This library is a JavaScript wrapper for the [Electric Imp impCentral API (v5)](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
 
-## Library Installation
+## Library Usage
+
+Using the library you are doing:
+
+- the library installation
+
+- the library instantiation
+
+- initializing the library by an access token
+
+- calling impCentral API methods
+
+- processing results
+
+- processing errors
+
+All these steps are described in the following sections.
+
+### Installation
 
 **TODO**
-
-## Library Usage
 
 ### Instantiation
 
@@ -16,12 +32,15 @@ By default the library works with the following impCentral API base endpoint: **
 
 You can optionally pass to the constructor an alternative impCentral API base endpoint. This can be used to connect to private impCloud installations.
 
+After instantiation use *ImpCentralApi* property getters to obtain the subclasses which provide methods to access impCentral API.
+
 ```javascript
 const Imp = require('imp-central-api');
-const imp = new Imp('<api_base_endpoint>'); 
+const imp = new Imp('<api_base_endpoint>');
+imp.auth.<auth_method()>;
+imp.products.<products_method()>;
 ```
-
-After instantiation use *ImpCentralApi* getters to obtain the subclasses which provide 
+**TODO: correct the example if needed**
 
 ### Authorization / Authentication
 
@@ -40,13 +59,18 @@ Remember, when access token is expired any call of impCentral API returns 401 er
 
 For more information see [impCentral API: Auth](https://preview-apidoc.electricimp.com/accounts.html#tag/Auth) **TODO: change the link to the final one**
 
-### Classes and Methods
+### impCentral API calls
 
 This library is a JavaScript wrapper for impCentral API.
 
-*Accounts, Products, DeviceGroups, Devices, Deployments* classes of the library map to the corresponding groups in impCentral API. Interface methods of these classes mostly map one to one to the corresponding methods of impCentral API.
+[Accounts](./lib/Accounts.js), [Products](./lib/Products.js), [DeviceGroups](./lib/DeviceGroups.js), [Devices](./lib/Devices.js), [Deployments](./lib/Deployments.js) classes of the library map to the corresponding groups in impCentral API. Interface methods of these classes mostly map one to one to the corresponding methods of impCentral API.
 
-The same is basically applicable to *Auth* class as well. But this class is enhanced to provide different ways of access token obtaining.
+See **impCentral API Coverage** section below for the list of the supported impCentral API methods.
+
+### Results Processing
+
+### Errors Processing
+
 
 
 
@@ -54,9 +78,6 @@ The same is basically applicable to *Auth* class as well. But this class is enha
 
 development features only
 
-### Results Returning
-
-### Errors Processing
 
 ### Filtering
 
