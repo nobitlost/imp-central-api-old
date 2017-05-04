@@ -2,7 +2,7 @@
 
 This library is a JavaScript wrapper for the [Electric Imp impCentral API (v5)](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
 
-It covers the functionality needed for development processes. The library does not cover factory and production processes.
+It's main purpose is to support development processes. The library is not intended for factory and production processes.
 
 ## Library Usage
 
@@ -24,7 +24,7 @@ All these steps are described in the following sections.
 
 ### Installation
 
-*imp-central-api* requires *node* and *npm* - see [Nodejs.org](https://nodejs.org/en/) for installation instructions. With *node* and *npm* installed enter the following:
+*imp-central-api* library requires *node* and *npm* - see [Nodejs.org](https://nodejs.org/en/) for installation instructions. With *node* and *npm* installed enter the following:
 
 ```
 npm install -g imp-central-api
@@ -85,15 +85,22 @@ The exact format of HTTP response body for every request can be found in [Electr
 
 ### Errors Processing
 
-[Error classes](./lib/Errors.js) define different types of errors returned by the library:
+[Error classes](./lib/Errors.js) define two types of errors returned by the library.
 
-- *LibraryError* - indicates that the library detects an error, e.g. the library is wrongly initialized. The error details can be found in the message property.
+- *InvalidDataError* - indicates that the library detects one of the following errors:
+  - the library is wrongly initialized. E.g. access token is not provided or obtained;
+  - the library method is called with invalid argument(s);
+  - internal library problem(s).
+  
+  The error details can be found in the message property.
+  
+  These errors usually happen during an application development. Usually they should be fixed during debugging and therefore should not occur after the application has been deployed.
 
-- *InvalidArgumentError* - indicates that the library method is called with invalid argument(s). The error details can be found in the message property.
+- *ImpCentralApiError* - Indicates that HTTP request to impCentral API failed.
 
-The two type of errors above indicate issues which usually happen during an application development. Usually they should be fixed during debugging and therefore should not occur after the application has been deployed.
-
-- *ImpCentralApiError* - Indicates that HTTP request to impCentral API failed. The error details can be found in the message, statusCode and body properties. This error may occur during the normal execution of an application. The exact body format is described in [impCentral API: Error Handling](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**
+  The error details can be found in the message, statusCode and body properties. The exact body format is described in [impCentral API: Error Handling](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**
+  
+  This error may occur during the normal execution of an application.
 
 ## impCentral API Coverage
 
@@ -137,7 +144,7 @@ Library Class: [Products](./lib/Products.js)
 
 Library Class: [DeviceGroups](./lib/DeviceGroups.js)
 
-Only *'development_devicegroup'* type is supported and accepted as parameters. Factory/Production related parameters are ignored.
+Only *'development_devicegroup'* type is accepted as an argument in device group creation/update. Factory/Production related parameters are ignored.
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
@@ -154,8 +161,6 @@ Only *'development_devicegroup'* type is supported and accepted as parameters. F
 
 Library Class: [Devices](./lib/Devices.js)
 
-Only *'development_devicegroup'* type is supported and accepted as parameters.
-
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
 | Assign one or more devices to a Device Group | *deviceGroups.addDevices()* |
@@ -169,8 +174,6 @@ Only *'development_devicegroup'* type is supported and accepted as parameters.
 ### [impCentral API: Deployments](https://preview-apidoc.electricimp.com/#tag/Deployments)
 
 Library Class: [Deployments](./lib/Deployments.js)
-
-Only *'development_devicegroup'* type is supported and accepted as parameters.
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
