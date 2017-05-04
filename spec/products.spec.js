@@ -73,7 +73,7 @@ describe('impCentralAPI.products test suite', () => {
                 done.fail('product without required attributes created successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -108,7 +108,7 @@ describe('impCentralAPI.products test suite', () => {
                 done.fail('list of products with incorrect filter obtained successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -172,7 +172,7 @@ describe('impCentralAPI.products test suite', () => {
                 done.fail('product updated successfully with wrong attributes');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();

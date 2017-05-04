@@ -98,7 +98,7 @@ describe('impCentralAPI.deployments test suite', () => {
                 done.fail('deployment with wrong attributes created successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -116,7 +116,7 @@ describe('impCentralAPI.deployments test suite', () => {
                 done.fail('deployment without required attributes created successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -151,7 +151,7 @@ describe('impCentralAPI.deployments test suite', () => {
                 done.fail('list of deployments with incorrect filter obtained successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -222,7 +222,7 @@ describe('impCentralAPI.deployments test suite', () => {
                 done.fail('deployment updated successfully with wrong attributes');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();

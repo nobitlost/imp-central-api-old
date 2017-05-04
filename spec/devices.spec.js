@@ -96,7 +96,7 @@ describe('impCentralAPI.devices test suite', () => {
                 done.fail('list of devices with incorrect filter obtained successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -202,7 +202,7 @@ describe('impCentralAPI.devices test suite', () => {
                     done.fail('device updated successfully with wrong attributes');
                 }).
                 catch((error) => {
-                    if (!(error instanceof Errors.InvalidArgumentError)) {
+                    if (!(error instanceof Errors.InvalidDataError)) {
                         done.fail('unexpected error');
                     }
                     done();

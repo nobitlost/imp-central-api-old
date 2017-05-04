@@ -201,8 +201,8 @@ let token;
 imp.auth.login(email, password).then(result => {
     token = result.access_token;
 }).catch(error => {
-    if (error instanceof Errors.InvalidArgumentError) {
-        // process InvalidArgumentError
+    if (error instanceof Errors.InvalidDataError) {
+        // process InvalidDataError
         console.log(error.message);
     }
     else if (error instanceof Errors.ImpCentralApiError) {

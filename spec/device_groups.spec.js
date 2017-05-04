@@ -89,7 +89,7 @@ describe('impCentralAPI.device_groups test suite', () => {
                 done.fail('device group with wrong type created successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -103,7 +103,7 @@ describe('impCentralAPI.device_groups test suite', () => {
                 done.fail('device group with wrong attributes created successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -116,7 +116,7 @@ describe('impCentralAPI.device_groups test suite', () => {
                 done.fail('device group without required attributes created successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -151,7 +151,7 @@ describe('impCentralAPI.device_groups test suite', () => {
                 done.fail('list of device groups with incorrect filter obtained successfully');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -218,7 +218,7 @@ describe('impCentralAPI.device_groups test suite', () => {
                 done.fail('device group updated successfully with wrong attributes');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();

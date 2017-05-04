@@ -81,7 +81,7 @@ describe('impCentralAPI.auth test suite', () => {
                 done.fail('get access token by empty login key');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
@@ -107,7 +107,7 @@ describe('impCentralAPI.auth test suite', () => {
                 done.fail('login with empty email or password');
             }).
             catch((error) => {
-                if (!(error instanceof Errors.InvalidArgumentError)) {
+                if (!(error instanceof Errors.InvalidDataError)) {
                     done.fail('unexpected error');
                 }
                 done();
