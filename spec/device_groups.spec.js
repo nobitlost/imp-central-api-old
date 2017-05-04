@@ -286,7 +286,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should remove devices from a specific device group', (done) => {
-        imp.deviceGroups.removeDevices(deviceGroupId, ...Object.keys(devices)).
+        imp.deviceGroups.removeDevices(deviceGroupId, null, ...Object.keys(devices)).
             then((res) => {
                 for (let device in devices) {
                     if (devices[device]) {

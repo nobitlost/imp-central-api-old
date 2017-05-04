@@ -24,7 +24,11 @@ All these steps are described in the following sections.
 
 ### Installation
 
-**TODO**
+*imp-central-api* requires *node* and *npm* - see [Nodejs.org](https://nodejs.org/en/) for installation instructions. With *node* and *npm* installed enter the following:
+
+```
+npm install -g imp-central-api
+```
 
 ### Instantiation
 
@@ -42,7 +46,6 @@ const imp = new Imp('<api_base_endpoint>');
 imp.auth.<auth_method()>;
 imp.products.<products_method()>;
 ```
-**TODO: correct the example, if needed, or remove at all**
 
 ### Authorization / Authentication
 
@@ -53,7 +56,7 @@ Access to almost every endpoint in impCentral API requires authorization. Author
 - if you already have a non-expired access token, e.g. saved after the previous usage of the library: use *set accessToken()* property setter;
 - if an access token is expired but you have a refresh token, e.g. saved after the previous usage of the library or received after *login()* methods: use *refreshAccessToken()* method;
 - if you have a login key: use *getAccessToken()* with login key;
-- alternatively, use *login()* method with identifier/password pair and, additionally, if Two-Factor authentication is enabled for your account, *loginUsingOtp() method with one-time password. Login methods allow to obtain the both - an access token and a refresh token.
+- alternatively, use *login()* method with identifier/password pair and, additionally, if Two-Factor authentication is enabled for your account, *loginWithOtp()* method with one-time password. Login methods allow to obtain the both - an access token and a refresh token.
 
 **TODO: leave only the finally supported methods**
 
@@ -187,52 +190,80 @@ Not supported by impCentral API yet.
 
 ## Examples
 
-**TODO: check the examples and correct/extend, if needed. Add more comments?**
-
 1. library initialization using email/password login:
 
 ```javascript
 const Imp = require('imp-central-api');
+const Errors = Imp.Errors;
 const imp = new Imp('https://api.ei.run/v5');
-var token;
-imp.auth.login(email, password).then((result) => {
-    token = result.access_token.access_token;
-},
-(error) => {
-    // check for the error
+
+let token;
+imp.auth.login(email, password).then(result => {
+    token = result.access_token;
+}).catch(error => {
+    if (error instanceof Errors.InvalidArgumentError) {
+        // process InvalidArgumentError
+        console.log(error.message);
+    }
+    else if (error instanceof Errors.ImpCentralApiError) {
+        // process impCentral API HTTP request failure
+        console.log(error.statusCode);
+        console.log(error.message);
+        console.log(error.body);
+    }
 });
 ```
 
 2. library initialization using existing access token, product and device group creation:
 
 ```javascript
-imp.auth.accessToken = token;
-var accountId;
-imp.accounts.get().then((result) => {
-    accountId = result.data.id;
-});
+const DeviceGroups = Imp.DeviceGroups;
 
-// accountId is optional parameter of create(), if not provided, product will be assigned to the acting user
-imp.products.create({ name : 'test_product'}, accountId).then((result) => {
-    var productId = result.data.id;
-    imp.deviceGroups.create(
+imp.auth.accessToken = token;
+
+let accountId;
+// retrieve account information
+imp.accounts.get('me').then(account => {
+    accountId = account.data.id;
+    // create a product
+    // accountId is optional parameter, if not provided, 
+    // product will be assigned to the acting user
+    return imp.products.create({ name : 'test_product'}, accountId);
+}).then(product => {
+    // retrieve the newly created product id
+    let productId = product.data.id;
+    // create a device group
+    return imp.deviceGroups.create(
         productId,
         DeviceGroups.TYPE_DEVELOPMENT,
-        {name : 'temp_sensors', descr : 'temperature sensors'}).then((result) => {
-        var devGroupId = result.data.id;
-    });
+        {name : 'temp_sensors', description : 'temperature sensors'});
+}).then(deviceGroup => {
+    // retrieve the newly created device group id
+    let devGroupId = deviceGroup.data.id;
+    console.log(devGroupId);
+}).catch(error => {
+    console.log(error);
 });
 ```
 
-3. list existing device groups with filters and restart all the devices from the first device group:
+3. list existing device groups with filters and restart all the devices from the specified device group:
 
 ```javascript
-var filters = {};
-filters[DeviceGroups.FILTER_OWNER_ID] = accountId;
-filters[DeviceGroups.FILTER_TYPE] = DeviceGroups.TYPE_DEVELOPMENT;
-imp.deviceGroups.list(filters).then((result) => {
-    var firstDevGroupId = result.data[0].id;
-    imp.deviceGroups.restartDevices(firstDevGroupId);
+let filters = {
+    [DeviceGroups.FILTER_OWNER_ID] : accountId,
+    [DeviceGroups.FILTER_TYPE] : DeviceGroups.TYPE_DEVELOPMENT
+};
+let devGroupName = 'temp_sensors';
+// list existing device groups
+imp.deviceGroups.list(filters).then(devGroups => {
+    for (let devGroup of devGroups.data) {
+        // find device group by name and restart associated devices
+        if (devGroup.attributes.name === devGroupName) {
+            imp.deviceGroups.restartDevices(devGroup.id);
+        }
+    }
+}).catch(error => {
+    console.log(error);
 });
 ```
 
