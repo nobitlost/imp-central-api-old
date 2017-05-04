@@ -192,6 +192,8 @@ Not supported by impCentral API yet.
 
 1. library initialization using email/password login:
 
+**TODO: change the url in the example to the final one**
+
 ```javascript
 const Imp = require('imp-central-api');
 const Errors = Imp.Errors;
