@@ -34,7 +34,7 @@ const DeviceGroups = require('../lib/DeviceGroups');
 const Deployments = require('../lib/Deployments');
 
 describe('impCentralAPI.deployments test suite', () => {
-    let imp = util.imp;
+    let impCentralApi = util.impCentralApi;
     let productId;
     let productName;
     let deviceGroupId;
@@ -45,7 +45,7 @@ describe('impCentralAPI.deployments test suite', () => {
 
     it('should create a product', (done) => {
         productName = 'tst_product_' + util.getRandomInt();
-        imp.products.create({name : productName}).
+        impCentralApi.products.create({name : productName}).
             then((res) => {
                 productId = res.data.id;
                 done();
@@ -57,7 +57,7 @@ describe('impCentralAPI.deployments test suite', () => {
 
     it('should create a device group', (done) => {
         deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
-        imp.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_DEVELOPMENT);
                 expect(res.data.attributes.name).toBe(deviceGroupName);
@@ -76,7 +76,7 @@ describe('impCentralAPI.deployments test suite', () => {
             agent_code : 'server.log("Hello World, from your Agent!");',
             flagged : true
         };
-        imp.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
+        impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
             then((res) => {
                 expect(res.data.type).toBe('deployment');
                 expect(res.data.relationships.devicegroup.id).toBe(deviceGroupId);
@@ -93,7 +93,7 @@ describe('impCentralAPI.deployments test suite', () => {
             device_code : 'server.log("Hello World, from your Device!");',
             tst_agent_code : 'server.log("Hello World, from your Agent!");'
         };
-        imp.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
+        impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
             then((res) => {
                 done.fail('deployment with wrong attributes created successfully');
             }).
@@ -111,7 +111,7 @@ describe('impCentralAPI.deployments test suite', () => {
             description : 'tst description',
             flagged : true
         };
-        imp.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
+        impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
             then((res) => {
                 done.fail('deployment without required attributes created successfully');
             }).
@@ -124,7 +124,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should get list of deployments', (done) => {
-        imp.deployments.list().
+        impCentralApi.deployments.list().
             then((res) => {
                 expect(res.data.length).toBeGreaterThan(0);
                 done();
@@ -135,7 +135,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should get list of deployments with pagination', (done) => {
-        imp.deployments.list(null, 1, 1).
+        impCentralApi.deployments.list(null, 1, 1).
             then((res) => {
                 expect(res.data.length).toBe(1);
                 done();
@@ -146,7 +146,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should not get list of deployments with incorrect filter', (done) => {
-        imp.deployments.list({ wrong_filter : productId }).
+        impCentralApi.deployments.list({ wrong_filter : productId }).
             then((res) => {
                 done.fail('list of deployments with incorrect filter obtained successfully');
             }).
@@ -159,7 +159,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should get list of deployments with valid filters', (done) => {
-        imp.deployments.list({ 
+        impCentralApi.deployments.list({ 
             [Deployments.FILTER_PRODUCT_ID] : productId, 
             [Deployments.FILTER_DEVICE_GROUP_ID] : deviceGroupId }).
             then((res) => {
@@ -172,7 +172,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should get a specific deployment', (done) => {
-        imp.deployments.get(deploymentId).
+        impCentralApi.deployments.get(deploymentId).
             then((res) => {
                 expect(res.data.id).toBe(deploymentId);
                 done();
@@ -183,7 +183,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should not get deployment with wrong id', (done) => {
-        imp.deployments.get(productId).
+        impCentralApi.deployments.get(productId).
             then((res) => {
                 done.fail('deployment with wrong id obtained successfully');
             }).
@@ -203,7 +203,7 @@ describe('impCentralAPI.deployments test suite', () => {
             flagged : false,
             tags : tags
         };
-        imp.deployments.update(deploymentId, attrs).
+        impCentralApi.deployments.update(deploymentId, attrs).
             then((res) => {
                 expect(res.data.id).toBe(deploymentId);
                 expect(res.data.attributes.description).toBe(descr);
@@ -217,7 +217,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should not update a specific deployment with wrong attributes', (done) => {
-        imp.deployments.update(deploymentId, DeviceGroups.TYPE_DEVELOPMENT, { tst_description : 'test description' }).
+        impCentralApi.deployments.update(deploymentId, DeviceGroups.TYPE_DEVELOPMENT, { tst_description : 'test description' }).
             then((res) => {
                 done.fail('deployment updated successfully with wrong attributes');
             }).
@@ -230,7 +230,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should not update deployment with wrong id', (done) => {
-        imp.deployments.update(deviceGroupId, { description: 'test description' }).
+        impCentralApi.deployments.update(deviceGroupId, { description: 'test description' }).
             then((res) => {
                 done.fail('deployment with wrong id updated successfully');
             }).
@@ -249,9 +249,9 @@ describe('impCentralAPI.deployments test suite', () => {
             device_code : 'server.log("Hello World, from your Device!");',
             agent_code : 'server.log("Hello World, from your Agent!");'
         };
-        imp.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
+        impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
             then((res) => {
-                imp.deployments.delete(deploymentId).
+                impCentralApi.deployments.delete(deploymentId).
                     then((res) => {
                         done();
                     }).
@@ -265,7 +265,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should not delete nonexistent deployment', (done) => {
-        imp.deployments.delete(deploymentId).
+        impCentralApi.deployments.delete(deploymentId).
             then((res) => {
                 done.fail('nonexistent deployment deleted successfully');
             }).
@@ -278,7 +278,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should delete a specific device group', (done) => {
-        imp.deviceGroups.delete(deviceGroupId).
+        impCentralApi.deviceGroups.delete(deviceGroupId).
             then((res) => {
                 done();
             }).
@@ -288,7 +288,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should delete a specific product', (done) => {
-        imp.products.delete(productId).
+        impCentralApi.products.delete(productId).
             then((res) => {
                 done();
             }).

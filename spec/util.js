@@ -29,15 +29,15 @@ const ImpCentralApi = require('../lib/ImpCentralApi');
 
 const TIMEOUT = 10000;
 
-var imp = new ImpCentralApi(config.apiEndpoint);
+var impCentralApi = new ImpCentralApi(config.apiEndpoint);
 
 module.exports.getRandomInt = function () {
     return Math.floor(Math.random() * 10000);
 }
 
 module.exports.init = function (done) {
-    imp.debug = config.debug;
-    imp.auth.login(config.email, config.password).
+    impCentralApi.debug = config.debug;
+    impCentralApi.auth.login(config.email, config.password).
         then((res) => {
             done();
         }).
@@ -46,5 +46,5 @@ module.exports.init = function (done) {
         });
 }
 
-module.exports.imp = imp;
+module.exports.impCentralApi = impCentralApi;
 module.exports.TIMEOUT = TIMEOUT;

@@ -31,13 +31,13 @@ const util = require('./util');
 const Errors = require('../lib/Errors');
 
 describe('impCentralAPI.accounts test suite', () => {
-    let imp = util.imp;
+    let impCentralApi = util.impCentralApi;
     let accountId;
 
     beforeAll(util.init, util.TIMEOUT);
 
     it('should get "me" account', (done) => {
-        imp.accounts.get('me').
+        impCentralApi.accounts.get('me').
             then((res) => {
                 expect(res.data.type).toBe('account');
                 accountId = res.data.id;
@@ -49,7 +49,7 @@ describe('impCentralAPI.accounts test suite', () => {
     });
 
     it('should get a specific account', (done) => {
-        imp.accounts.get(accountId).
+        impCentralApi.accounts.get(accountId).
             then((res) => {
                 expect(res.data.type).toBe('account');
                 expect(res.data.id).toBe(accountId);
@@ -61,7 +61,7 @@ describe('impCentralAPI.accounts test suite', () => {
     });
 
     it('should not get an account with wrong id', (done) => {
-        imp.accounts.get('wrong-id').
+        impCentralApi.accounts.get('wrong-id').
             then((res) => {
                 done.fail('account with wrong id obtained successfully');
             }).

@@ -41,10 +41,10 @@ You can optionally pass to the constructor an alternative impCentral API base en
 After instantiation use *ImpCentralApi* property getters to obtain the subclasses which provide methods to access impCentral API.
 
 ```javascript
-const Imp = require('imp-central-api');
-const imp = new Imp('<api_base_endpoint>');
-imp.auth.<auth_method()>;
-imp.products.<products_method()>;
+const ImpCentralApi = require('imp-central-api');
+const impCentralApi = new ImpCentralApi('<api_base_endpoint>');
+impCentralApi.auth.<auth_method()>;
+impCentralApi.products.<products_method()>;
 ```
 
 ### Authorization / Authentication
@@ -198,12 +198,12 @@ Not supported by impCentral API yet.
 **TODO: change the url in the example to the final one**
 
 ```javascript
-const Imp = require('imp-central-api');
-const Errors = Imp.Errors;
-const imp = new Imp('https://api.ei.run/v5');
+const ImpCentralApi = require('imp-central-api');
+const Errors = ImpCentralApi.Errors;
+const impCentralApi = new ImpCentralApi('https://api.ei.run/v5');
 
 let token;
-imp.auth.login(email, password).then(result => {
+impCentralApi.auth.login('<user email for Electric Imp Account>', '<user password for Electric Imp Account>').then(result => {
     token = result.access_token;
 }).catch(error => {
     if (error instanceof Errors.InvalidDataError) {
@@ -222,23 +222,23 @@ imp.auth.login(email, password).then(result => {
 2. library initialization using existing access token, product and device group creation:
 
 ```javascript
-const DeviceGroups = Imp.DeviceGroups;
+const DeviceGroups = ImpCentralApi.DeviceGroups;
 
-imp.auth.accessToken = token;
+impCentralApi.auth.accessToken = token;
 
 let accountId;
 // retrieve account information
-imp.accounts.get('me').then(account => {
+impCentralApi.accounts.get('me').then(account => {
     accountId = account.data.id;
     // create a product
     // accountId is optional parameter, if not provided, 
     // product will be assigned to the acting user
-    return imp.products.create({ name : 'test_product'}, accountId);
+    return impCentralApi.products.create({ name : 'test_product'}, accountId);
 }).then(product => {
     // retrieve the newly created product id
     let productId = product.data.id;
     // create a device group
-    return imp.deviceGroups.create(
+    return impCentralApi.deviceGroups.create(
         productId,
         DeviceGroups.TYPE_DEVELOPMENT,
         {name : 'temp_sensors', description : 'temperature sensors'});
@@ -260,11 +260,11 @@ let filters = {
 };
 let devGroupName = 'temp_sensors';
 // list existing device groups
-imp.deviceGroups.list(filters).then(devGroups => {
+impCentralApi.deviceGroups.list(filters).then(devGroups => {
     for (let devGroup of devGroups.data) {
         // find device group by name and restart associated devices
         if (devGroup.attributes.name === devGroupName) {
-            imp.deviceGroups.restartDevices(devGroup.id);
+            impCentralApi.deviceGroups.restartDevices(devGroup.id);
         }
     }
 }).catch(error => {

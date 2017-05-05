@@ -32,7 +32,7 @@ const Errors = require('../lib/Errors');
 const Products = require('../lib/Products');
 
 describe('impCentralAPI.products test suite', () => {
-    let imp = util.imp;
+    let impCentralApi = util.impCentralApi;
     let productId;
     let productName;
     let ownerId;
@@ -41,7 +41,7 @@ describe('impCentralAPI.products test suite', () => {
 
     it('should create a product', (done) => {
         productName = 'tst_product_' + util.getRandomInt();
-        imp.products.create({name : productName}).
+        impCentralApi.products.create({name : productName}).
             then((res) => {
                 expect(res.data.type).toBe('product');
                 expect(res.data.attributes.name).toBe(productName);
@@ -55,7 +55,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should not create a product with non unique name', (done) => {
-        imp.products.create({ name : productName }).
+        impCentralApi.products.create({ name : productName }).
             then((res) => {
                 done.fail('product with non unique name created successfully');
             }).
@@ -68,7 +68,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should not create a product without required attributes', (done) => {
-        imp.products.create({ description : 'description' }).
+        impCentralApi.products.create({ description : 'description' }).
             then((res) => {
                 done.fail('product without required attributes created successfully');
             }).
@@ -81,7 +81,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should get list of products', (done) => {
-        imp.products.list().
+        impCentralApi.products.list().
             then((res) => {
                 expect(res.data.length).toBeGreaterThan(0);
                 done();
@@ -92,7 +92,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should get list of products with pagination', (done) => {
-        imp.products.list(null, 1, 1).
+        impCentralApi.products.list(null, 1, 1).
             then((res) => {
                 expect(res.data.length).toBe(1);
                 done();
@@ -103,7 +103,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should not get list of products with incorrect filter', (done) => {
-        imp.products.list({ wrong_filter : ownerId }).
+        impCentralApi.products.list({ wrong_filter : ownerId }).
             then((res) => {
                 done.fail('list of products with incorrect filter obtained successfully');
             }).
@@ -116,7 +116,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should get list of products with valid filter', (done) => {
-        imp.products.list({ [Products.FILTER_OWNER_ID] : ownerId }).
+        impCentralApi.products.list({ [Products.FILTER_OWNER_ID] : ownerId }).
             then((res) => {
                 expect(res.data.length).toBeGreaterThan(0);
                 done();
@@ -127,7 +127,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should get a specific product', (done) => {
-        imp.products.get(productId).
+        impCentralApi.products.get(productId).
             then((res) => {
                 expect(res.data.id).toBe(productId);
                 expect(res.data.attributes.name).toBe(productName);
@@ -139,7 +139,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should not get product with wrong id', (done) => {
-        imp.products.get(ownerId).
+        impCentralApi.products.get(ownerId).
             then((res) => {
                 done.fail('product with wrong id obtained successfully');
             }).
@@ -154,7 +154,7 @@ describe('impCentralAPI.products test suite', () => {
     it('should update a specific product', (done) => {
         let descr = 'test description';
         productName = 'tst_product_' + util.getRandomInt();
-        imp.products.update(productId, {description : descr, name: productName}).
+        impCentralApi.products.update(productId, {description : descr, name: productName}).
             then((res) => {
                 expect(res.data.id).toBe(productId);
                 expect(res.data.attributes.description).toBe(descr);
@@ -167,7 +167,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should not update a specific product with wrong attributes', (done) => {
-        imp.products.update(productId, { tst_description : 'test description', tst_name: 'test name' }).
+        impCentralApi.products.update(productId, { tst_description : 'test description', tst_name: 'test name' }).
             then((res) => {
                 done.fail('product updated successfully with wrong attributes');
             }).
@@ -180,7 +180,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should not update product with wrong id', (done) => {
-        imp.products.update(ownerId, { description: 'test description' }).
+        impCentralApi.products.update(ownerId, { description: 'test description' }).
             then((res) => {
                 done.fail('product with wrong id updated successfully');
             }).
@@ -193,7 +193,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should delete a specific product', (done) => {
-        imp.products.delete(productId).
+        impCentralApi.products.delete(productId).
             then((res) => {
                 done();
             }).
@@ -203,7 +203,7 @@ describe('impCentralAPI.products test suite', () => {
     });
 
     it('should not delete nonexistent product', (done) => {
-        imp.products.delete(productId).
+        impCentralApi.products.delete(productId).
             then((res) => {
                 done.fail('nonexistent product deleted successfully');
             }).

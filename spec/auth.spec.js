@@ -32,14 +32,14 @@ const Errors = require('../lib/Errors');
 const config = require('./config');
 
 describe('impCentralAPI.auth test suite', () => {
-    let imp = util.imp;
+    let impCentralApi = util.impCentralApi;
     let accountId;
 
     it('should refresh access token', (done) => {
-        imp.auth.login(config.email, config.password).
+        impCentralApi.auth.login(config.email, config.password).
             then((res) => {
                 if ('refresh_token' in res) {
-                    imp.auth.refreshAccessToken(res.refresh_token).
+                    impCentralApi.auth.refreshAccessToken(res.refresh_token).
                         then((res) => {
                             expect('access_token' in res).toBeTruthy();
                             done();
@@ -61,7 +61,7 @@ describe('impCentralAPI.auth test suite', () => {
 
     it('should get access token by login key', (done) => {
         if (config.login_key) {
-            imp.auth.getAccessToken(config.login_key).
+            impCentralApi.auth.getAccessToken(config.login_key).
                 then((res) => {
                     expect('access_token' in res).toBeTruthy();
                     done();
@@ -76,7 +76,7 @@ describe('impCentralAPI.auth test suite', () => {
     });
 
     it('should not get access token by empty login key', (done) => {
-        imp.auth.getAccessToken('').
+        impCentralApi.auth.getAccessToken('').
             then((res) => {
                 done.fail('get access token by empty login key');
             }).
@@ -89,7 +89,7 @@ describe('impCentralAPI.auth test suite', () => {
     });
 
     it('should not get access token by wrong login key', (done) => {
-        imp.auth.getAccessToken('wrong_login_key').
+        impCentralApi.auth.getAccessToken('wrong_login_key').
             then((res) => {
                 done.fail('get access token by wrong login key');
             }).
@@ -102,7 +102,7 @@ describe('impCentralAPI.auth test suite', () => {
     });
 
     it('should not login with empty email or password', (done) => {
-        imp.auth.login('', null).
+        impCentralApi.auth.login('', null).
             then((res) => {
                 done.fail('login with empty email or password');
             }).
@@ -115,7 +115,7 @@ describe('impCentralAPI.auth test suite', () => {
     });
 
     it('should not login with wrong email or password', (done) => {
-        imp.auth.login(config.email, config.password + '123').
+        impCentralApi.auth.login(config.email, config.password + '123').
             then((res) => {
                 done.fail('login with wrong email or password');
             }).

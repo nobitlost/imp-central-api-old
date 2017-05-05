@@ -33,7 +33,7 @@ const Products = require('../lib/Products');
 const DeviceGroups = require('../lib/DeviceGroups');
 
 describe('impCentralAPI.device_groups test suite', () => {
-    let imp = util.imp;
+    let impCentralApi = util.impCentralApi;
     let productName;
     let productId;
     let deviceGroupName;
@@ -44,7 +44,7 @@ describe('impCentralAPI.device_groups test suite', () => {
 
     it('should create a product', (done) => {
         productName = 'tst_product_' + util.getRandomInt();
-        imp.products.create({name : productName}).
+        impCentralApi.products.create({name : productName}).
             then((res) => {
                 productId = res.data.id;
                 done();
@@ -56,7 +56,7 @@ describe('impCentralAPI.device_groups test suite', () => {
 
     it('should create a device group', (done) => {
         deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
-        imp.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_DEVELOPMENT);
                 expect(res.data.attributes.name).toBe(deviceGroupName);
@@ -70,7 +70,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not create a device group with non unique name', (done) => {
-        imp.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
             then((res) => {
                 done.fail('device group with non unique name created successfully');
             }).
@@ -84,7 +84,7 @@ describe('impCentralAPI.device_groups test suite', () => {
 
     it('should not create a device group with wrong type', (done) => {
         let deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
-        imp.deviceGroups.create(productId, 'wrong_type', { name : deviceGroupName }).
+        impCentralApi.deviceGroups.create(productId, 'wrong_type', { name : deviceGroupName }).
             then((res) => {
                 done.fail('device group with wrong type created successfully');
             }).
@@ -98,7 +98,7 @@ describe('impCentralAPI.device_groups test suite', () => {
 
     it('should not create a device group with wrong attributes', (done) => {
         let deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
-        imp.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name_ : deviceGroupName }).
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name_ : deviceGroupName }).
             then((res) => {
                 done.fail('device group with wrong attributes created successfully');
             }).
@@ -111,7 +111,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not create a device group without required attributes', (done) => {
-        imp.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { description : 'test description' }).
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { description : 'test description' }).
             then((res) => {
                 done.fail('device group without required attributes created successfully');
             }).
@@ -124,7 +124,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should get list of device groups', (done) => {
-        imp.deviceGroups.list().
+        impCentralApi.deviceGroups.list().
             then((res) => {
                 expect(res.data.length).toBeGreaterThan(0);
                 done();
@@ -135,7 +135,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should get list of device groups with pagination', (done) => {
-        imp.deviceGroups.list(null, 1, 1).
+        impCentralApi.deviceGroups.list(null, 1, 1).
             then((res) => {
                 expect(res.data.length).toBe(1);
                 done();
@@ -146,7 +146,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not get list of device groups with incorrect filter', (done) => {
-        imp.deviceGroups.list({ wrong_filter : productId }).
+        impCentralApi.deviceGroups.list({ wrong_filter : productId }).
             then((res) => {
                 done.fail('list of device groups with incorrect filter obtained successfully');
             }).
@@ -159,7 +159,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should get list of device groups with valid filter', (done) => {
-        imp.deviceGroups.list({ 
+        impCentralApi.deviceGroups.list({ 
             [DeviceGroups.FILTER_PRODUCT_ID] : productId, 
             [DeviceGroups.FILTER_TYPE] : DeviceGroups.TYPE_DEVELOPMENT }).
             then((res) => {
@@ -172,7 +172,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should get a specific device group', (done) => {
-        imp.deviceGroups.get(deviceGroupId).
+        impCentralApi.deviceGroups.get(deviceGroupId).
             then((res) => {
                 expect(res.data.id).toBe(deviceGroupId);
                 expect(res.data.type).toBe(DeviceGroups.TYPE_DEVELOPMENT);
@@ -185,7 +185,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not get device group with wrong id', (done) => {
-        imp.deviceGroups.get(productId).
+        impCentralApi.deviceGroups.get(productId).
             then((res) => {
                 done.fail('device group with wrong id obtained successfully');
             }).
@@ -200,7 +200,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     it('should update a specific device group', (done) => {
         let descr = 'test description';
         deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
-        imp.deviceGroups.update(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, { description : descr, name: deviceGroupName }).
+        impCentralApi.deviceGroups.update(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, { description : descr, name: deviceGroupName }).
             then((res) => {
                 expect(res.data.id).toBe(deviceGroupId);
                 expect(res.data.attributes.description).toBe(descr);
@@ -213,7 +213,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not update a specific device group with wrong attributes', (done) => {
-        imp.deviceGroups.update(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, { tst_description : 'test description', tst_name: 'test name' }).
+        impCentralApi.deviceGroups.update(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, { tst_description : 'test description', tst_name: 'test name' }).
             then((res) => {
                 done.fail('device group updated successfully with wrong attributes');
             }).
@@ -226,7 +226,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not update device group with wrong id', (done) => {
-        imp.deviceGroups.update(productId, DeviceGroups.TYPE_DEVELOPMENT, { description: 'test description' }).
+        impCentralApi.deviceGroups.update(productId, DeviceGroups.TYPE_DEVELOPMENT, { description: 'test description' }).
             then((res) => {
                 done.fail('device group with wrong id updated successfully');
             }).
@@ -239,7 +239,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should add devices to a specific device group', (done) => {
-        imp.devices.list().
+        impCentralApi.devices.list().
             then((res) => {
                 if (res.data.length > 0) {
                     for (let device of res.data) {
@@ -248,9 +248,9 @@ describe('impCentralAPI.device_groups test suite', () => {
                             device.relationships.devicegroup.id : 
                             null;
                     }
-                    imp.deviceGroups.addDevices(deviceGroupId, ...Object.keys(devices)).
+                    impCentralApi.deviceGroups.addDevices(deviceGroupId, ...Object.keys(devices)).
                         then((res) => {
-                            imp.devices.list().
+                            impCentralApi.devices.list().
                             then((res) => {
                                 expect(res.data.length).toBe(Object.keys(devices).length);
                                 for (let device of res.data) {
@@ -276,7 +276,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should restart devices from a specific device group', (done) => {
-        imp.deviceGroups.restartDevices(deviceGroupId).
+        impCentralApi.deviceGroups.restartDevices(deviceGroupId).
             then((res) => {
                 done();
             }).
@@ -286,11 +286,11 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should remove devices from a specific device group', (done) => {
-        imp.deviceGroups.removeDevices(deviceGroupId, null, ...Object.keys(devices)).
+        impCentralApi.deviceGroups.removeDevices(deviceGroupId, null, ...Object.keys(devices)).
             then((res) => {
                 for (let device in devices) {
                     if (devices[device]) {
-                        imp.deviceGroups.addDevices(devices[device], device).
+                        impCentralApi.deviceGroups.addDevices(devices[device], device).
                             then((res) => {}).
                             catch((error) => {
                                 done.fail(error);
@@ -305,7 +305,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should delete a specific device group', (done) => {
-        imp.deviceGroups.delete(deviceGroupId).
+        impCentralApi.deviceGroups.delete(deviceGroupId).
             then((res) => {
                 done();
             }).
@@ -315,7 +315,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not delete nonexistent device group', (done) => {
-        imp.deviceGroups.delete(deviceGroupId).
+        impCentralApi.deviceGroups.delete(deviceGroupId).
             then((res) => {
                 done.fail('nonexistent device group deleted successfully');
             }).
@@ -328,7 +328,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should delete a specific product', (done) => {
-        imp.products.delete(productId).
+        impCentralApi.products.delete(productId).
             then((res) => {
                 done();
             }).

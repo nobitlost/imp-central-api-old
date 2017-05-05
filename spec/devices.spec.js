@@ -33,7 +33,7 @@ const Devices = require('../lib/Devices');
 const DeviceGroups = require('../lib/DeviceGroups');
 
 describe('impCentralAPI.devices test suite', () => {
-    let imp = util.imp;
+    let impCentralApi = util.impCentralApi;
     let productId;
     let productName;
     let ownerId;
@@ -46,7 +46,7 @@ describe('impCentralAPI.devices test suite', () => {
 
     it('should create a product', (done) => {
         productName = 'tst_product_' + util.getRandomInt();
-        imp.products.create({name : productName}).
+        impCentralApi.products.create({name : productName}).
             then((res) => {
                 expect(res.data.type).toBe('product');
                 expect(res.data.attributes.name).toBe(productName);
@@ -60,7 +60,7 @@ describe('impCentralAPI.devices test suite', () => {
     });
 
     it('should get list of devices', (done) => {
-        imp.devices.list().
+        impCentralApi.devices.list().
             then((res) => {
                 if (res.data.length > 0) {
                     for (let device of res.data) {
@@ -78,7 +78,7 @@ describe('impCentralAPI.devices test suite', () => {
     });
     
     it('should get list of devices with pagination', (done) => {
-        imp.devices.list(null, 1, 1).
+        impCentralApi.devices.list(null, 1, 1).
             then((res) => {
                 if (Object.keys(devices).length > 0) {
                     expect(res.data.length).toBe(1);
@@ -91,7 +91,7 @@ describe('impCentralAPI.devices test suite', () => {
     });
 
     it('should not get list of devices with incorrect filter', (done) => {
-        imp.devices.list({ wrong_filter : 'value' }).
+        impCentralApi.devices.list({ wrong_filter : 'value' }).
             then((res) => {
                 done.fail('list of devices with incorrect filter obtained successfully');
             }).
@@ -104,7 +104,7 @@ describe('impCentralAPI.devices test suite', () => {
     });
 
     it('should get list of devices with valid filter', (done) => {
-        imp.devices.list({ [Devices.FILTER_OWNER_ID] : ownerId }).
+        impCentralApi.devices.list({ [Devices.FILTER_OWNER_ID] : ownerId }).
             then((res) => {
                 if (Object.keys(devices).length > 0) {
                     expect(res.data.length).toBeGreaterThan(0);
@@ -117,7 +117,7 @@ describe('impCentralAPI.devices test suite', () => {
     });
 
     it('should get list of devices with all available filters', (done) => {
-        imp.devices.list({
+        impCentralApi.devices.list({
             [Devices.FILTER_OWNER_ID] : ownerId,
             [Devices.FILTER_PRODUCT_ID] : productId,
             [Devices.FILTER_DEVICE_GROUP_ID] : deviceGroupId,
@@ -134,7 +134,7 @@ describe('impCentralAPI.devices test suite', () => {
     it('should get a specific device', (done) => {
         if (Object.keys(devices).length > 0) {
             let deviceId = Object.keys(devices)[0];
-            imp.devices.get(deviceId).
+            impCentralApi.devices.get(deviceId).
                 then((res) => {
                     expect(res.data.id).toBe(deviceId);
                     expect(res.data.type).toBe('device');
@@ -150,7 +150,7 @@ describe('impCentralAPI.devices test suite', () => {
     });
 
     it('should not get device with wrong id', (done) => {
-        imp.devices.get('wrong_id').
+        impCentralApi.devices.get('wrong_id').
             then((res) => {
                 done.fail('device with wrong id obtained successfully');
             }).
@@ -165,14 +165,14 @@ describe('impCentralAPI.devices test suite', () => {
     it('should update a specific device', (done) => {
         if (Object.keys(devices).length > 0) {
             let deviceId = Object.keys(devices)[0];
-            imp.devices.get(deviceId).
+            impCentralApi.devices.get(deviceId).
                 then((res) => {
                     let deviceName = res.data.attributes.name;
                     let testName = 'device test name';
-                    imp.devices.update(deviceId, { name : testName }).
+                    impCentralApi.devices.update(deviceId, { name : testName }).
                         then((res) => {
                             expect(res.data.attributes.name).toBe(testName);
-                            imp.devices.update(deviceId, { name : deviceName }).
+                            impCentralApi.devices.update(deviceId, { name : deviceName }).
                                 then((res) => {
                                     expect(res.data.attributes.name).toBe(deviceName);
                                     done();
@@ -197,7 +197,7 @@ describe('impCentralAPI.devices test suite', () => {
     it('should not update a specific device with wrong attributes', (done) => {
         if (Object.keys(devices).length > 0) {
             let deviceId = Object.keys(devices)[0];
-            imp.devices.update(deviceId, { tst_name: 'test name' }).
+            impCentralApi.devices.update(deviceId, { tst_name: 'test name' }).
                 then((res) => {
                     done.fail('device updated successfully with wrong attributes');
                 }).
@@ -214,7 +214,7 @@ describe('impCentralAPI.devices test suite', () => {
     });
 
     it('should not update device with wrong id', (done) => {
-        imp.devices.update(ownerId, { name : 'test name' }).
+        impCentralApi.devices.update(ownerId, { name : 'test name' }).
             then((res) => {
                 done.fail('device with wrong id updated successfully');
             }).
@@ -229,11 +229,11 @@ describe('impCentralAPI.devices test suite', () => {
     it('should restart a specific device', (done) => {
         if (Object.keys(devices).length > 0) {
             let deviceId = Object.keys(devices)[0];
-            imp.devices.get(deviceId).
+            impCentralApi.devices.get(deviceId).
                 then((res) => {
                     // unassigned devices can not be restarted
                     if (('devicegroup' in res.data.relationships)) {
-                        imp.devices.restart(deviceId).
+                        impCentralApi.devices.restart(deviceId).
                             then((res) => {
                                 done();
                             }).
@@ -255,7 +255,7 @@ describe('impCentralAPI.devices test suite', () => {
     });
 
     it('should delete a specific product', (done) => {
-        imp.products.delete(productId).
+        impCentralApi.products.delete(productId).
             then((res) => {
                 done();
             }).
