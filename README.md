@@ -203,7 +203,8 @@ const Errors = ImpCentralApi.Errors;
 const impCentralApi = new ImpCentralApi('https://api.ei.run/v5');
 
 let token;
-impCentralApi.auth.login('<user email for Electric Imp Account>', '<user password for Electric Imp Account>').then(result => {
+impCentralApi.auth.login('<user email for Electric Imp Account>', 
+                         '<user password for Electric Imp Account>').then(result => {
     token = result.access_token;
 }).catch(error => {
     if (error instanceof Errors.InvalidDataError) {
