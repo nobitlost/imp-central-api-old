@@ -223,8 +223,13 @@ impCentralApi.auth.login('<user email for Electric Imp Account>',
 2. library initialization using existing access token, product and device group creation:
 
 ```javascript
+const ImpCentralApi = require('imp-central-api');
 const DeviceGroups = ImpCentralApi.DeviceGroups;
 
+const impCentralApi = new ImpCentralApi();
+
+// the library can be initialized by non-expired access token if exists 
+// (e.g. saved after the previous usage of the library)
 impCentralApi.auth.accessToken = token;
 
 let accountId;
