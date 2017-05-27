@@ -49,9 +49,7 @@ describe('impCentralAPI.auth test suite', () => {
                         });
                 }
                 else {
-                    // temporary commented until v5 auth becomes available
-                    //done.fail('No refresh_token in login response');
-                    done();
+                    done.fail('No refresh_token in login response');
                 }
             }).
             catch((error) => {
