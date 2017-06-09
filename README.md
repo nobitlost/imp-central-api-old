@@ -161,7 +161,7 @@ Only *'development_devicegroup'* type is accepted as an argument in device group
 
 ### [impCentral API: Devices](https://preview-apidoc.electricimp.com/#tag/Devices)
 
-Library Class: [Devices](./lib/Devices.js)
+Library Classes: [Devices](./lib/Devices.js), [DeviceGroups](./lib/DeviceGroups.js)
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
@@ -187,7 +187,7 @@ Library Class: [Deployments](./lib/Deployments.js)
 
 ### [impCentral API: Logs](https://preview-apidoc.electricimp.com/#tag/Logs)
 
-Library Class: [LogStreams](./lib/LogStreams.js)
+Library Classes: [LogStreams](./lib/LogStreams.js), [Devices](./lib/Devices.js)
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
@@ -290,6 +290,8 @@ impCentralApi.deviceGroups.list(filters).then(devGroups => {
     console.log(error);
 });
 ```
+
+**TODO: add example for logs**
 
 ## License
 
