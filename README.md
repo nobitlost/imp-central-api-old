@@ -24,7 +24,9 @@ All these steps are described in the following sections.
 
 ### Installation
 
-*imp-central-api* library requires *node* and *npm* - see [Nodejs.org](https://nodejs.org/en/) for installation instructions. With *node* and *npm* installed enter the following:
+[Node.js](https://nodejs.org/en/) is required.
+You can download the Node.js [pre-built binary](https://nodejs.org/en/download/) for your platform or install Node.js via [package manager](https://nodejs.org/en/download/package-manager).
+Once `node` and `npm` are installed, you need to execute the following command to set up *imp-central-api*:
 
 ```
 npm install -g imp-central-api
@@ -62,13 +64,13 @@ Access to almost every endpoint in impCentral API requires authorization. Author
 
 Remember, when access token is expired any call of impCentral API returns 401 error. You need to re-initialize the library by a new access token using one of the above methods.
 
-For more information see [impCentral API: Auth](https://preview-apidoc.electricimp.com/accounts.html#tag/Auth) **TODO: change the link to the final one**
+For more information see [impCentral API: Auth](https://preview-apidoc.electricimp.com/#tag/Auth) **TODO: change the link to the final one**
 
 ### impCentral API Calls
 
 This library is a JavaScript wrapper for impCentral API.
 
-[Accounts](./lib/Accounts.js), [Products](./lib/Products.js), [DeviceGroups](./lib/DeviceGroups.js), [Devices](./lib/Devices.js), [Deployments](./lib/Deployments.js) classes of the library map to the corresponding groups in impCentral API. Interface methods of these classes mostly map one to one to the corresponding methods of impCentral API.
+[Accounts](./lib/Accounts.js), [Products](./lib/Products.js), [DeviceGroups](./lib/DeviceGroups.js), [Devices](./lib/Devices.js), [Deployments](./lib/Deployments.js), [LogStreams](./lib/LogStreams.js) classes of the library map to the corresponding groups in impCentral API. Interface methods of these classes mostly map one to one to the corresponding methods of impCentral API.
 
 See **impCentral API Coverage** section below for the list of the supported impCentral API methods.
 
@@ -159,7 +161,7 @@ Only *'development_devicegroup'* type is accepted as an argument in device group
 
 ### [impCentral API: Devices](https://preview-apidoc.electricimp.com/#tag/Devices)
 
-Library Class: [Devices](./lib/Devices.js)
+Library Classes: [Devices](./lib/Devices.js), [DeviceGroups](./lib/DeviceGroups.js)
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
@@ -183,11 +185,22 @@ Library Class: [Deployments](./lib/Deployments.js)
 | Update a specific Deployment | *deployments.update()* |
 | Delete a Deployment | *deployments.delete()* |
 
+### [impCentral API: Logs](https://preview-apidoc.electricimp.com/#tag/Logs)
+
+Library Classes: [LogStreams](./lib/LogStreams.js), [Devices](./lib/Devices.js)
+
+| impCentral API Functionality | Library Method(s) |
+| ---------------------------- | ----------------- |
+| Get historical logs for a specific Device | *devices.getLogs()* |
+| Request a new logstream, Retrieve logs from a Logstream | *logStreams.create()* |
+| Add a device to a Logstream | *logStreams.addDevice()* |
+| Remove a device from a Logstream | *logStreams.removeDevice()* |
+
 ### [impCentral API: Webhooks](https://preview-apidoc.electricimp.com/#tag/Webhooks)
 
 Not supported (Factory/Production feature).
 
-### impCentral API: Logging
+### impCentral API: Collaboration
 
 Not supported by impCentral API yet.
 
@@ -277,6 +290,8 @@ impCentralApi.deviceGroups.list(filters).then(devGroups => {
     console.log(error);
 });
 ```
+
+**TODO: add example for logs**
 
 ## License
 
