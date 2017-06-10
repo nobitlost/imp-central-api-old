@@ -39,6 +39,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     let deviceGroupName;
     let deviceGroupId;
     let devices = {};
+    let devicesInfo = [];
 
     beforeAll(util.init, util.TIMEOUT);
 
@@ -256,6 +257,7 @@ describe('impCentralAPI.device_groups test suite', () => {
                                 for (let device of res.data) {
                                     expect(device.relationships.devicegroup.id).toBe(deviceGroupId);
                                 }
+                                devicesInfo = res.data;
                                 done();
                             }).
                             catch((error) => {
@@ -284,6 +286,70 @@ describe('impCentralAPI.device_groups test suite', () => {
                 done.fail(error);
             });
     });
+
+    it('should remove devices by MAC address from a specific device group', (done) => {
+        let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.mac_address);
+        impCentralApi.deviceGroups.removeDevices(deviceGroupId, null, ...devices).
+            then((res) => {
+                done();
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    });
+
+    it('should add devices by MAC address to a specific device group', (done) => {
+        let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.mac_address);
+        impCentralApi.deviceGroups.addDevices(deviceGroupId, ...devices).
+            then((res) => {
+                impCentralApi.devices.list().
+                then((res) => {
+                    expect(res.data.length).toBe(Object.keys(devices).length);
+                    for (let device of res.data) {
+                        expect(device.relationships.devicegroup.id).toBe(deviceGroupId);
+                    }
+                    done();
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    });
+
+    it('should remove devices by Agent ID from a specific device group', (done) => {
+        let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.agent_id);
+        impCentralApi.deviceGroups.removeDevices(deviceGroupId, null, ...devices).
+            then((res) => {
+                done();
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    }, util.TIMEOUT);
+
+    it('should add devices by Agent ID to a specific device group', (done) => {
+        let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.agent_id);
+        impCentralApi.deviceGroups.addDevices(deviceGroupId, ...devices).
+            then((res) => {
+                impCentralApi.devices.list().
+                then((res) => {
+                    expect(res.data.length).toBe(Object.keys(devices).length);
+                    for (let device of res.data) {
+                        expect(device.relationships.devicegroup.id).toBe(deviceGroupId);
+                    }
+                    done();
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    }, util.TIMEOUT);
 
     it('should remove devices from a specific device group', (done) => {
         impCentralApi.deviceGroups.removeDevices(deviceGroupId, null, ...Object.keys(devices)).

@@ -27,7 +27,7 @@
 const config = require('./config');
 const ImpCentralApi = require('../lib/ImpCentralApi');
 
-const TIMEOUT = 10000;
+const TIMEOUT = 20000;
 
 var impCentralApi = new ImpCentralApi(config.apiEndpoint);
 

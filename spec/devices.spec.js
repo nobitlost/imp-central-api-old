@@ -64,10 +64,7 @@ describe('impCentralAPI.devices test suite', () => {
             then((res) => {
                 if (res.data.length > 0) {
                     for (let device of res.data) {
-                        devices[device.id] = 
-                            ('devicegroup' in device.relationships) ? 
-                            device.relationships.devicegroup.id : 
-                            null;
+                        devices[device.id] = device;
                     }
                 }
                 done();
@@ -131,23 +128,31 @@ describe('impCentralAPI.devices test suite', () => {
             });
     });
 
-    it('should get a specific device', (done) => {
+    it('should get a specific device by ID, MAC address and Agent ID', (done) => {
         if (Object.keys(devices).length > 0) {
             let deviceId = Object.keys(devices)[0];
-            impCentralApi.devices.get(deviceId).
-                then((res) => {
-                    expect(res.data.id).toBe(deviceId);
-                    expect(res.data.type).toBe('device');
-                    done();
-                }).
-                catch((error) => {
-                    done.fail(error);
-                });
+            let device = devices[deviceId];
+            let deviceIdentifiers = [deviceId, device.attributes.mac_address];
+            let agentId = device.attributes.agent_id;
+            if (agentId) {
+                deviceIdentifiers.push(agentId);
+            }
+            deviceIdentifiers.reduce(
+                (acc, identifier) => acc.then(() => {
+                    return impCentralApi.devices.get(identifier).
+                        then((res) => {
+                            expect(res.data.id).toBe(deviceId);
+                            expect(res.data.type).toBe('device');
+                        }).
+                        catch((error) => {
+                            done.fail(error);
+                        });
+                }), Promise.resolve()).then(() => done());
         }
         else {
             done();
         }
-    });
+    }, util.TIMEOUT * 3);
 
     it('should not get device with wrong id', (done) => {
         impCentralApi.devices.get('wrong_id').
@@ -162,28 +167,35 @@ describe('impCentralAPI.devices test suite', () => {
             });
     });
     
-    it('should update a specific device', (done) => {
+    it('should update a specific device by ID, MAC address and Agent ID', (done) => {
         if (Object.keys(devices).length > 0) {
             let deviceId = Object.keys(devices)[0];
             impCentralApi.devices.get(deviceId).
                 then((res) => {
                     let deviceName = res.data.attributes.name;
                     let testName = 'device test name';
-                    impCentralApi.devices.update(deviceId, { name : testName }).
-                        then((res) => {
-                            expect(res.data.attributes.name).toBe(testName);
-                            impCentralApi.devices.update(deviceId, { name : deviceName }).
+                    let deviceIdentifiers = [deviceId, res.data.attributes.mac_address];
+                    let agentId = res.data.attributes.agent_id;
+                    if (agentId) {
+                        deviceIdentifiers.push(agentId);
+                    }
+                    deviceIdentifiers.reduce(
+                        (acc, identifier) => acc.then(() => {
+                            return impCentralApi.devices.update(identifier, { name : testName }).
                                 then((res) => {
-                                    expect(res.data.attributes.name).toBe(deviceName);
-                                    done();
+                                    expect(res.data.attributes.name).toBe(testName);
+                                    return impCentralApi.devices.update(identifier, { name : deviceName }).
+                                        then((res) => {
+                                            expect(res.data.attributes.name).toBe(deviceName);
+                                        }).
+                                        catch((error) => {
+                                            done.fail(error);
+                                        });
                                 }).
                                 catch((error) => {
                                     done.fail(error);
                                 });
-                        }).
-                        catch((error) => {
-                            done.fail(error);
-                        });
+                        }), Promise.resolve()).then(() => done());
                 }).
                 catch((error) => {
                     done.fail(error);
@@ -192,7 +204,7 @@ describe('impCentralAPI.devices test suite', () => {
         else {
             done();
         }
-    });
+    }, util.TIMEOUT * 3);
 
     it('should not update a specific device with wrong attributes', (done) => {
         if (Object.keys(devices).length > 0) {
@@ -226,24 +238,73 @@ describe('impCentralAPI.devices test suite', () => {
             });
     });
 
-    it('should restart a specific device', (done) => {
+    it('should restart a specific device by ID, MAC address and Agent ID', (done) => {
         if (Object.keys(devices).length > 0) {
             let deviceId = Object.keys(devices)[0];
             impCentralApi.devices.get(deviceId).
                 then((res) => {
                     // unassigned devices can not be restarted
                     if (('devicegroup' in res.data.relationships)) {
-                        impCentralApi.devices.restart(deviceId).
-                            then((res) => {
-                                done();
-                            }).
-                            catch((error) => {
-                                done.fail(error);
-                            });
+                        let deviceIdentifiers = [deviceId, res.data.attributes.mac_address, res.data.attributes.agent_id];
+                        deviceIdentifiers.reduce(
+                            (acc, identifier) => acc.then(() => {
+                                return impCentralApi.devices.restart(identifier).
+                                    then((res) => {
+                                    }).
+                                    catch((error) => {
+                                        done.fail(error);
+                                    });
+                            }), Promise.resolve()).then(() => done());
                     }
                     else {
                         done();
                     }
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+        }
+        else {
+            done();
+        }
+    }, util.TIMEOUT * 3);
+
+    it('should get historical logs for a specific Device by ID, MAC address and Agent ID', (done) => {
+        if (Object.keys(devices).length > 0) {
+            let deviceId = Object.keys(devices)[0];
+            impCentralApi.devices.get(deviceId).
+                then((res) => {
+                    let deviceIdentifiers = [deviceId, res.data.attributes.mac_address];
+                    let agentId = res.data.attributes.agent_id;
+                    if (agentId) {
+                        deviceIdentifiers.push(agentId);
+                    }
+                    deviceIdentifiers.reduce(
+                        (acc, identifier) => acc.then(() => {
+                            return impCentralApi.devices.getLogs(identifier).
+                                then((res) => {
+                                }).
+                                catch((error) => {
+                                    done.fail(error);
+                                });
+                        }), Promise.resolve()).then(() => done());
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+        }
+        else {
+            done();
+        }
+    }, util.TIMEOUT * 3);
+
+    it('should get historical logs for a specific Device with pagination', (done) => {
+        if (Object.keys(devices).length > 0) {
+            let deviceId = Object.keys(devices)[0];
+            return impCentralApi.devices.getLogs(deviceId, 1, 1).
+                then((res) => {
+                    expect(res.data.length).toBe(1);
+                    done();
                 }).
                 catch((error) => {
                     done.fail(error);
