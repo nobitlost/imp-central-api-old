@@ -291,7 +291,45 @@ impCentralApi.deviceGroups.list(filters).then(devGroups => {
 });
 ```
 
-**TODO: add example for logs**
+4. get historical logs for a specific Device
+
+```javascript
+let deviceId = '<existing Device ID>';
+let pageNumber = 1;
+let pageSize = 10;
+impCentralApi.devices.getLogs(deviceId, pageNumber, pageSize).then(logs => {
+    for (let log of logs.data) {
+        console.log(log.ts + ': '+ log.msg);
+    }    
+}).catch(error => {
+    console.log(error);
+});
+```
+
+5. Retrieve logs from a LogStream for all devices assigned to a device group
+
+```javascript
+const Devices = ImpCentralApi.Devices;
+
+function logMessage(message) {
+    console.log(message);
+}
+
+function logState(state) {
+    console.log(state);
+}
+
+let deviceGroupId = '<existing Device Group ID>';
+let logStreamId;
+impCentralApi.logStreams.create(logMessage, logState).then(logStream => {
+    logStreamId = logStream.data.id;
+    return impCentralApi.devices.list({[Devices.FILTER_DEVICE_GROUP_ID] : deviceGroupId});
+}).then(devices => {
+    return Promise.all(devices.data.map(device => impCentralApi.logStreams.addDevice(logStreamId, device.id)));
+}).catch(error => {
+    console.log(error);
+});
+```
 
 ## License
 
