@@ -264,25 +264,12 @@ describe('impCentralAPI.logStreams test suite', () => {
         });
     });
 
-    // it('should add device by MAC address to a json logstream', (done) => {
-    //     if (deviceId) {
-    //         impCentralApi.devices.get(deviceId).then((res) => {
-    //             deviceMacAddress = res.data.attributes.mac_address;
-    //             return impCentralApi.logStreams.addDevice(jsonLogStreamId, deviceMacAddress);
-    //         }).then(() => {
-    //             done();
-    //         }).catch((error) => {
-    //             done.fail(error);
-    //         });
-    //     }
-    //     else {
-    //         done();
-    //     }
-    // });
-
-    it('should add device to a json logstream', (done) => {
+    it('should add device by MAC address to a json logstream', (done) => {
         if (deviceId) {
-            impCentralApi.logStreams.addDevice(jsonLogStreamId, deviceId).then(() => {
+            impCentralApi.devices.get(deviceId).then((res) => {
+                deviceMacAddress = res.data.attributes.mac_address;
+                return impCentralApi.logStreams.addDevice(jsonLogStreamId, deviceMacAddress);
+            }).then(() => {
                 done();
             }).catch((error) => {
                 done.fail(error);
@@ -306,24 +293,9 @@ describe('impCentralAPI.logStreams test suite', () => {
         }
     });
 
-    // it('should remove device by MAC address from a json logstream', (done) => {
-    //     if (deviceId) {
-    //         impCentralApi.logStreams.removeDevice(jsonLogStreamId, deviceMacAddress).
-    //             then((res) => {
-    //                 done();
-    //             }).
-    //             catch((error) => {
-    //                 done.fail(error);
-    //             });
-    //     }
-    //     else {
-    //         done();
-    //     }
-    // });
-
-    it('should remove device from a json logstream', (done) => {
+    it('should remove device by MAC address from a json logstream', (done) => {
         if (deviceId) {
-            impCentralApi.logStreams.removeDevice(jsonLogStreamId, deviceId).
+            impCentralApi.logStreams.removeDevice(jsonLogStreamId, deviceMacAddress).
                 then((res) => {
                     done();
                 }).
@@ -336,36 +308,36 @@ describe('impCentralAPI.logStreams test suite', () => {
         }
     });
 
-    // it('should add device by Agent ID to a json logstream', (done) => {
-    //     if (deviceId) {
-    //         impCentralApi.devices.get(deviceId).then((res) => {
-    //             deviceAgentId = res.data.attributes.agent_id;
-    //             return impCentralApi.logStreams.addDevice(jsonLogStreamId, deviceAgentId);
-    //         }).then(() => {
-    //             done();
-    //         }).catch((error) => {
-    //             done.fail(error);
-    //         });
-    //     }
-    //     else {
-    //         done();
-    //     }
-    // }, util.TIMEOUT);
+    it('should add device by Agent ID to a json logstream', (done) => {
+        if (deviceId) {
+            impCentralApi.devices.get(deviceId).then((res) => {
+                deviceAgentId = res.data.attributes.agent_id;
+                return impCentralApi.logStreams.addDevice(jsonLogStreamId, deviceAgentId);
+            }).then(() => {
+                done();
+            }).catch((error) => {
+                done.fail(error);
+            });
+        }
+        else {
+            done();
+        }
+    }, util.TIMEOUT * 3);
 
-    // it('should remove device by Agent ID from a json logstream', (done) => {
-    //     if (deviceId) {
-    //         impCentralApi.logStreams.removeDevice(jsonLogStreamId, deviceAgentId).
-    //             then((res) => {
-    //                 done();
-    //             }).
-    //             catch((error) => {
-    //                 done.fail(error);
-    //             });
-    //     }
-    //     else {
-    //         done();
-    //     }
-    // }, util.TIMEOUT);
+    it('should remove device by Agent ID from a json logstream', (done) => {
+        if (deviceId) {
+            impCentralApi.logStreams.removeDevice(jsonLogStreamId, deviceAgentId).
+                then((res) => {
+                    done();
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+        }
+        else {
+            done();
+        }
+    }, util.TIMEOUT);
 
     it('should remove devices from a specific device group', (done) => {
         if (deviceId) {
